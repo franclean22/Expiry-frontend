@@ -285,7 +285,7 @@ const Order = () => {
                       {!sdkReady ? (
                         <Loading />
                       ) : (
-                        <PayPalButton
+                        <PayPalButtons
                           amount={order?.totalPrice}
                           onSuccess={successPaymentHandler}
                         />
