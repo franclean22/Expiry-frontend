@@ -18,7 +18,7 @@ import {
   getOrderPay,
 } from "./../Redux/Action/OrderActions";
 import moment from "moment";
-import { PayPalButton } from "react-paypal-button-v2";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Loading from "./../Loading/Error/Loading";
 import { ORDER_PAY_RESET } from "./../Redux/Constants/OrderConstants";
 import PayBtn from "../components/PayBtn";
@@ -229,7 +229,7 @@ const Order = () => {
                   {!order?.isPaid && (
                     <div className="paypal-cont">
                       {loadingPay && <Loading />}
-                      <PayPalButton
+                      <PayPalButtons
                         amount={order?.totalPrice}
                         onSuccess={successPaymentHandler}
                       />
