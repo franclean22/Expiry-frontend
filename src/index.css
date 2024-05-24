@@ -2273,3 +2273,19 @@ textarea {
     gap: 1.7rem;
   }
 }
+.bn{
+  min-width: 120px;
+  background-color: green;
+  /* min-height: 30px; */
+  font-size: 1rem;
+  padding: 0.7rem;
+  border: none;
+  color: white;
+}
+.bn:hover{
+  background-color: rgb(27, 108, 27);
+}
+.bn:disabled{
+  background-color: rgb(212, 209, 209);
+  cursor: not-allowed;
+}

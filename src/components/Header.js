@@ -6,8 +6,15 @@ import { useState, useEffect } from "react";
 import { FaAddressBook, FaBars, FaSearch } from "react-icons/fa";
 import { IS_ACTIVE } from "./../Redux/Constants/SidebarConstant";
 import { logout } from "../Redux/Action/UserAction";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
+import moment from "moment";
+import "react-toastify/dist/ReactToastify.css";
 const Header = () => {
+  const api = axios.create({
+    baseURL: process.env.REACT_APP_API_URL, // Replace with your environment variable name
+  });
   const history = useNavigate();
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
@@ -15,7 +22,7 @@ const Header = () => {
   const setSidebar = useSelector((state) => state.setSidebar);
   const openSidebar = () => {
     dispatch({ type: IS_ACTIVE });
-};
+  };
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo, loading, error } = userLogin;
   console.log(userInfo);
@@ -36,9 +43,75 @@ const Header = () => {
   };
   const userDetails = useSelector((state) => state.userDetails);
   const { user } = userDetails;
+  const [message, setMessage] = useState("");
+
+  const [loadingg, setLoadingg] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [erorrr, setErorrr] = useState(false);
+
+  const handleCheckExpiry = async () => {
+    setLoadingg(true);
+    try {
+      const response = await api.get("/api/products/check-expiry");
+      setSuccess(true);
+    } catch (error) {
+      setSuccess(false);
+      setErorrr(true);
+    } finally {
+      setLoadingg(false);
+   
+    }
+  };
+  React.useEffect(() => {
+    if (success) {
+      toast(`Expiry check and email notifications sent successfully `, {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+        const timer = setTimeout(() => {
+          setSuccess(false);
+        }, 1000); // Adjust the duration as needed
+
+        // Cleanup the timer when the component unmounts or success changes
+        return () => clearTimeout(timer);
+    }
+    if (erorrr) {
+      toast(`Error checking expiry and sending email notifications`, {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+        const timer = setTimeout(() => {
+          setErorrr(false);
+        }, 1000); // Adjust the duration as needed
+
+        // Cleanup the timer when the component unmounts or success changes
+        return () => clearTimeout(timer);
+    }
+  }, [success, erorrr]);
+
   return (
     <>
       {/****HEADER FOR LARGE SCREEN *****/}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <header className="header-upper large px-3 ">
         <div className="container-xxl">
           <div className="row align-items-center">
@@ -76,7 +149,6 @@ const Header = () => {
                       Favorite <br /> Wishlist
                     </p>
                   </Link>
-                  
                 </div>
                 <div className="small-avatar header-items">
                   {userInfo ? (
@@ -236,6 +308,13 @@ const Header = () => {
                     <NavLink to="/store">Store</NavLink>
                     <NavLink to="/contact">Contact</NavLink>
                     <NavLink to="/blog">Blogs</NavLink>
+                    <button
+                      onClick={handleCheckExpiry}
+                      disabled={loadingg}
+                      className="bn"
+                    >
+                      {loadingg ? "Checking..." : "Check Expiry"}
+                    </button>
                   </div>
                 </div>
               </div>

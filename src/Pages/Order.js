@@ -18,7 +18,7 @@ import {
   getOrderPay,
 } from "./../Redux/Action/OrderActions";
 import moment from "moment";
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import Loading from "./../Loading/Error/Loading";
 import { ORDER_PAY_RESET } from "./../Redux/Constants/OrderConstants";
 import PayBtn from "../components/PayBtn";
@@ -229,10 +229,17 @@ const Order = () => {
                   {!order?.isPaid && (
                     <div className="paypal-cont">
                       {loadingPay && <Loading />}
-                      <PayPalButtons
-                        amount={order?.totalPrice}
-                        onSuccess={successPaymentHandler}
-                      />
+                      <PayPalScriptProvider
+                        options={{
+                          "client-id":
+                            "ASsvP6Onbj7BTG8tOMQYNyTqr847tZkmrQEIkSyjDazbsjelx5uO4XZxaYdnzTZeVSd20HE8aB7IiYOE",
+                        }}
+                      >
+                        <PayPalButtons
+                          amount={order?.totalPrice}
+                          onSuccess={successPaymentHandler}
+                        />
+                      </PayPalScriptProvider>
 
                       {/* <PayBtn orderr={order?.orderItems} user={order?.user} id={order?._id}/> */}
                     </div>
@@ -285,10 +292,17 @@ const Order = () => {
                       {!sdkReady ? (
                         <Loading />
                       ) : (
-                        <PayPalButtons
-                          amount={order?.totalPrice}
-                          onSuccess={successPaymentHandler}
-                        />
+                        <PayPalScriptProvider
+                          options={{
+                            "client-id":
+                              "ASsvP6Onbj7BTG8tOMQYNyTqr847tZkmrQEIkSyjDazbsjelx5uO4XZxaYdnzTZeVSd20HE8aB7IiYOE",
+                          }}
+                        >
+                          <PayPalButtons
+                            amount={order?.totalPrice}
+                            onSuccess={successPaymentHandler}
+                          />
+                        </PayPalScriptProvider>
                       )}
                     </div>
                   )}
